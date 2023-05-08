@@ -1,5 +1,6 @@
 import pizzaLogo from '../assets/img/pizza-logo.svg';
 import styles from '../assets/scss/app.module.css';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
@@ -13,7 +14,7 @@ const Header = () => {
                     </div>
                 </div>
                 <div className={styles.header__cart}>
-                    <a href="#" className={`${styles.button} ${styles['button--cart']}`}>
+                    <Link to="/cart" className={`${styles.button} ${styles['button--cart']}`}>
                         <span>520 ₽</span>
                         <div className={styles.button__delimiter}></div>
                         <svg
@@ -45,7 +46,7 @@ const Header = () => {
                             />
                         </svg>
                         <span>3</span>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
