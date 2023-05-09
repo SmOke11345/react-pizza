@@ -4,9 +4,7 @@ import styles from '../assets/scss/app.module.css';
 
 const initCategory = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-const Categories = () => {
-    const [activeIndex, setActiveIndex] = React.useState(0);
-
+const Categories = ({ value, onChangeCategory }) => {
     return (
         <div className={styles.categories}>
             <ul>
@@ -15,9 +13,9 @@ const Categories = () => {
                         <li
                             key={index}
                             onClick={() => {
-                                setActiveIndex(index);
+                                onChangeCategory(index);
                             }}
-                            className={activeIndex === index ? `${styles.active}` : ''}>
+                            className={value === index ? `${styles.active}` : ''}>
                             {category}
                         </li>
                     );

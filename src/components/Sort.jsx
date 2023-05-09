@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../assets/scss/app.module.css';
 
-const sort = ['популярности', 'цене', 'алфавиту'];
+const sort = [
+    { name: 'популярности (↓)', sortName: 'rating' },
+    { name: 'популярности (↑)', sortName: '-rating' },
+    { name: 'цене (↓)', sortName: 'price' },
+    { name: 'цене (↑)', sortName: '-price' },
+    { name: 'алфавиту (↓)', sortName: 'title' },
+    { name: 'алфавиту (↑)', sortName: '-title' },
+];
 
-const Sort = () => {
+const Sort = ({ value, onChangeSort }) => {
     const [open, setOpen] = React.useState(false);
-    const [selectedSort, setSelectedSort] = React.useState(0);
 
     return (
         <div className={styles.sort}>
@@ -37,21 +43,25 @@ const Sort = () => {
                     </svg>
                 )}
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpen(!open)}>{sort[selectedSort]}</span>
+                <span onClick={() => setOpen(!open)}>{value.name}</span>
             </div>
             {open && (
                 <div className={styles.sort__popup}>
                     <ul>
-                        {sort.map((item, index) => {
+                        {sort.map((obj, index) => {
                             return (
+                                // здесь сравниваются два объекта, и родитель обязательно должен хранить какой либо
+                                // схожий объект чтобы все корректно отображалось
                                 <li
                                     key={index}
                                     onClick={() => {
-                                        setSelectedSort(index);
+                                        onChangeSort(obj);
                                         setOpen(false);
                                     }}
-                                    className={selectedSort === index ? `${styles.active}` : ''}>
-                                    {item}
+                                    className={
+                                        value.sortName === obj.sortName ? `${styles.active}` : ''
+                                    }>
+                                    {obj.name}
                                 </li>
                             );
                         })}

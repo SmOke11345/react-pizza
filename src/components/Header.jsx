@@ -1,6 +1,6 @@
 import pizzaLogo from '../assets/img/pizza-logo.svg';
 import styles from '../assets/scss/app.module.css';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const Header = () => {
     return (
@@ -9,7 +9,9 @@ const Header = () => {
                 <div className={styles.header__logo}>
                     <img width="38" src={pizzaLogo} alt="Pizza logo" />
                     <div>
-                        <h1>React Pizza</h1>
+                        <NavLink to="/">
+                            <h1>React Pizza</h1>
+                        </NavLink>
                         <p>самая вкусная пицца во вселенной</p>
                     </div>
                 </div>

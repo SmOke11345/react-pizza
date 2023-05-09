@@ -31,11 +31,12 @@
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 10px 0;
-	width: 160px;
 
 
 	ul {
 	  overflow: hidden;
+	  display: grid;
+	  grid-template-columns: repeat(2, 1fr);
 
 	  li {
 		padding: 12px 20px;

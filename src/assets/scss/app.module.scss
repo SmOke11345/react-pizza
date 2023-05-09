@@ -25,15 +25,43 @@ body {
   }
 
   &__items {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	grid-column-gap: 40px;
+	grid-row-gap: 40px;
+  }
+
+  @media screen and (max-width: 1450px) {
+	&__items {
+	  grid-template-columns: repeat(3, 1fr);
+	}
+  }
+
+  @media screen and (max-width: 1150px) {
+	&__items {
+	  grid-template-columns: repeat(2, 1fr);
+	  justify-items: center;
+	}
+  }
+  @media screen and (max-width: 790px) {
+	&__items {
+	  grid-template-columns: 1fr;
+
+	}
   }
 
   &__top {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+  }
+
+  @media screen and (max-width: 1300px) {
+	&__top {
+	  flex-direction: column-reverse;
+	  gap: 40px;
+	}
   }
 }
 
