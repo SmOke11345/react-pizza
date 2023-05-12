@@ -5,24 +5,28 @@ import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import Skeleton from '../components/pizzaItem/Skeleton';
 import PizzaItem from '../components/pizzaItem/PizzaItem';
+import Pagination from '../components/Pagination';
 
 import styles from '../assets/scss/app.module.css';
+import { SearchContext } from '../App';
 
 const Home = () => {
+    const { search } = React.useContext(SearchContext);
+
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [categoryID, setCategoryID] = React.useState(0);
+
+    const [currentPage, setCurrentPage] = React.useState(1);
 
     // можно сказать что это как бы стандартное значение, но в дальнейшем в этот объект будут добавляться новые
     const [sort, setSort] = React.useState({
         name: 'популярности (↑)',
         sortName: 'rating',
     });
-    //&sortBy=${sortingName[sort]}
 
     const request = `?category=${categoryID}`;
 
-    console.log(sort);
     React.useEffect(() => {
         setIsLoading(true);
 
@@ -31,9 +35,11 @@ const Home = () => {
         // sort asc or desc
         const sortAD = sort.sortName.includes('-') ? 'asc' : 'desc';
 
+        const searchValue = search ? `&search=${search}` : '';
+
         axios
             .get(
-                `https://6458b2368badff578ef810ab.mockapi.io/items${category}sortBy=${sortBy}&order=${sortAD}`,
+                `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${category}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
             )
             .then((res) => {
                 const newItems = res.data;
@@ -46,10 +52,21 @@ const Home = () => {
                 setIsLoading(false);
                 window.scroll(0, 0);
             });
-    }, [categoryID, sort]);
+    }, [categoryID, sort, search, currentPage]);
     // deps[] используется для того чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
     // единожды при первой загрузке
+
+    // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
+    // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
+    const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
+    const pizza = items
+        .filter((obj) => {
+            if (obj.title.toLowerCase().includes(search.toLowerCase())) {
+                return true;
+            }
+        })
+        .map((item) => <PizzaItem key={item.id} {...item} />);
 
     return (
         <>
@@ -75,13 +92,8 @@ const Home = () => {
                     />
                 </div>
                 <h2 className={styles.content__title}>Все пиццы</h2>
-                <div className={styles.content__items}>
-                    {isLoading
-                        ? // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
-                          // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
-                          [...new Array(6)].map((_, index) => <Skeleton key={index} />)
-                        : items.map((item) => <PizzaItem key={item.id} {...item} />)}
-                </div>
+                <div className={styles.content__items}>{isLoading ? skeleton : pizza}</div>
+                <Pagination onChangePage={(number) => setCurrentPage(number)} />
             </div>
         </>
     );

@@ -1,6 +1,9 @@
+import React from 'react';
+
 import pizzaLogo from '../assets/img/pizza-logo.svg';
 import styles from '../assets/scss/app.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Search from './search/Search';
 
 const Header = () => {
     return (
@@ -9,12 +12,13 @@ const Header = () => {
                 <div className={styles.header__logo}>
                     <img width="38" src={pizzaLogo} alt="Pizza logo" />
                     <div>
-                        <NavLink to="/">
+                        <Link to="/">
                             <h1>React Pizza</h1>
-                        </NavLink>
+                        </Link>
                         <p>самая вкусная пицца во вселенной</p>
                     </div>
                 </div>
+                <Search />
                 <div className={styles.header__cart}>
                     <Link to="/cart" className={`${styles.button} ${styles['button--cart']}`}>
                         <span>520 ₽</span>

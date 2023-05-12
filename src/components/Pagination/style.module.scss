@@ -1,0 +1,22 @@
+.paginate {
+  display: flex;
+  width: 190px;
+  justify-content: space-between;
+  margin-top: 40px;
+
+  :global {
+	li {
+	  border: 1px solid #e0e0e0;
+	  border-radius: 50%;
+	  padding: 5px 12px;
+	  cursor: pointer;
+	  user-select: none;
+
+	}
+
+	.selected {
+	  background-color: #c7c3c3;
+	}
+  }
+
+}
