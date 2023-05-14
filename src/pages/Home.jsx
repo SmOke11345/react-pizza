@@ -8,38 +8,39 @@ import PizzaItem from '../components/pizzaItem/PizzaItem';
 import Pagination from '../components/Pagination';
 
 import styles from '../assets/scss/app.module.css';
+
 import { SearchContext } from '../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategory, setCurrentPage } from '../redux/slices/filterSlice';
 
 const Home = () => {
     const { search } = React.useContext(SearchContext);
 
+    const { category, sortProp, currentPage } = useSelector((state) => state.filter);
+    const sortType = sortProp.sortName;
+
+    // const category = useSelector((state) => state.filter.category);
+    // const sortType = useSelector((state) => state.filter.sortProp.sortName);
+    // const pageCount = useSelector((state) => state.filter.currentPage);
+    const dispatch = useDispatch();
+
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [categoryID, setCategoryID] = React.useState(0);
 
-    const [currentPage, setCurrentPage] = React.useState(1);
-
-    // можно сказать что это как бы стандартное значение, но в дальнейшем в этот объект будут добавляться новые
-    const [sort, setSort] = React.useState({
-        name: 'популярности (↑)',
-        sortName: 'rating',
-    });
-
-    const request = `?category=${categoryID}`;
+    const request = `?category=${category}`;
 
     React.useEffect(() => {
         setIsLoading(true);
 
-        const category = categoryID > 0 ? `${request}&` : '?';
-        const sortBy = sort.sortName.replace('-', '');
+        const categoryUrl = category > 0 ? `${request}&` : '?';
+        const sortBy = sortType.replace('-', '');
         // sort asc or desc
-        const sortAD = sort.sortName.includes('-') ? 'asc' : 'desc';
-
+        const sortAD = sortType.includes('-') ? 'asc' : 'desc';
         const searchValue = search ? `&search=${search}` : '';
 
         axios
             .get(
-                `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${category}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
+                `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
             )
             .then((res) => {
                 const newItems = res.data;
@@ -52,7 +53,7 @@ const Home = () => {
                 setIsLoading(false);
                 window.scroll(0, 0);
             });
-    }, [categoryID, sort, search, currentPage]);
+    }, [category, sortType, search, currentPage]);
     // deps[] используется для того чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
     // единожды при первой загрузке
@@ -79,21 +80,19 @@ const Home = () => {
                      */}
                     {/*функция говорит что нужно взять index*/}
                     <Categories
-                        value={categoryID}
+                        value={category}
                         onChangeCategory={(index) => {
-                            setCategoryID(index);
+                            dispatch(setCategory(index));
                         }}
                     />
-                    <Sort
-                        value={sort}
-                        onChangeSort={(index) => {
-                            setSort(index);
-                        }}
-                    />
+                    <Sort />
                 </div>
                 <h2 className={styles.content__title}>Все пиццы</h2>
                 <div className={styles.content__items}>{isLoading ? skeleton : pizza}</div>
-                <Pagination onChangePage={(number) => setCurrentPage(number)} />
+                <Pagination
+                    currentPage={currentPage}
+                    onChangePage={(number) => dispatch(setCurrentPage(number))}
+                />
             </div>
         </>
     );

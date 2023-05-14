@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from '../assets/scss/app.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSort } from '../redux/slices/filterSlice';
 
-const sort = [
+const list = [
     { name: 'популярности (↓)', sortName: 'rating' },
     { name: 'популярности (↑)', sortName: '-rating' },
     { name: 'цене (↓)', sortName: 'price' },
@@ -10,8 +12,11 @@ const sort = [
     { name: 'алфавиту (↑)', sortName: '-title' },
 ];
 
-const Sort = ({ value, onChangeSort }) => {
+const Sort = () => {
     const [open, setOpen] = React.useState(false);
+
+    const sort = useSelector((state) => state.filter.sortProp);
+    const dispatch = useDispatch();
 
     return (
         <div className={styles.sort}>
@@ -43,23 +48,23 @@ const Sort = ({ value, onChangeSort }) => {
                     </svg>
                 )}
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpen(!open)}>{value.name}</span>
+                <span onClick={() => setOpen(!open)}>{sort.name}</span>
             </div>
             {open && (
                 <div className={styles.sort__popup}>
                     <ul>
-                        {sort.map((obj, index) => {
+                        {list.map((obj, index) => {
                             return (
                                 // здесь сравниваются два объекта, и родитель обязательно должен хранить какой либо
                                 // схожий объект чтобы все корректно отображалось
                                 <li
                                     key={index}
                                     onClick={() => {
-                                        onChangeSort(obj);
+                                        dispatch(setSort(obj));
                                         setOpen(false);
                                     }}
                                     className={
-                                        value.sortName === obj.sortName ? `${styles.active}` : ''
+                                        sort.sortName === obj.sortName ? `${styles.active}` : ''
                                     }>
                                     {obj.name}
                                 </li>

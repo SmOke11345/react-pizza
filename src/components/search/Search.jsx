@@ -1,10 +1,30 @@
 import React from 'react';
 
+// Используется для создания задержки при вводе запроса, т.е при вводе нового символа задержка обновляется,
+// до тех пор, пока пользователь не перестанет вводить свой запрос
+// (но лучше найти что-то полегче, т.к нужно создавать контролируемый импут локально)
+import debounce from 'lodash.debounce';
+
 import styles from './style.module.css';
 import { SearchContext } from '../../App';
 
 const Search = () => {
-    const { search, setSearch } = React.useContext(SearchContext);
+    const [value, setValue] = React.useState('');
+
+    const { setSearch } = React.useContext(SearchContext);
+
+    // Для обращения к DOM элемента в React
+    const searchRef = React.useRef();
+
+    // useCallback, используется для того чтобы, обозначить те функции,
+    // которые не нужно каждый раз пересоздавать (создай только один раз и больше не пересоздавай),
+    // в deps указываются эти функции (на подобии useEffect), только в отличии от useEffect, он возвращает (отложенную)функцию.
+    const LoadSearch = React.useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 1000),
+        [],
+    );
 
     return (
         <div className={styles.input_wrapper}>
@@ -33,17 +53,24 @@ const Search = () => {
                 />
             </svg>
             <input
+                ref={searchRef}
                 className={styles.search}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                value={value}
+                onChange={(event) => {
+                    setValue(event.target.value);
+                    LoadSearch(event.target.value);
+                }}
                 type="text"
-                name="q"
                 placeholder="Поиск пиццы..."
             />
-            {search && (
+            {value && (
                 <svg
                     className={styles.close}
-                    onClick={() => setSearch('')}
+                    onClick={() => {
+                        setValue('');
+                        setSearch('');
+                        searchRef.current.focus();
+                    }}
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
                     y="0px"

@@ -5,14 +5,20 @@
   margin-top: 40px;
 }
 .paginate :global li {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #f24701;
   border-radius: 50%;
   padding: 5px 12px;
   cursor: pointer;
   user-select: none;
 }
+.paginate :global li a {
+  opacity: 0.9;
+}
 .paginate :global .selected {
-  background-color: #c7c3c3;
+  background-color: #f24701;
+}
+.paginate :global li.selected a {
+  color: #FFFFFF;
 }
 
 /*# sourceMappingURL=style.module.css.map */

@@ -1,6 +1,4 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { decrement, increment } from './redux/slices/filterSlice';
 
 import { Route, Routes } from 'react-router';
 
@@ -16,25 +14,9 @@ export const SearchContext = React.createContext();
 function App() {
     const [search, setSearch] = React.useState('');
 
-    const filter = useSelector((state) => state.filter.value);
-    const dispatch = useDispatch();
-
     return (
         <>
             <div className={styles.wrapper}>
-                <button
-                    onClick={() => {
-                        dispatch(increment());
-                    }}>
-                    Добавить
-                </button>
-                {filter}
-                <button
-                    onClick={() => {
-                        dispatch(decrement());
-                    }}>
-                    Убрать
-                </button>
                 <SearchContext.Provider value={{ search, setSearch }}>
                     <Header />
                     <div className={styles.content}>
