@@ -1,35 +1,41 @@
 import React from 'react';
 import axios from 'axios';
+// Библиотека для извлечения и управления параметрами URL запроса
+import qs from 'qs';
+import { useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories';
-import Sort from '../components/Sort';
+import Sort, { list } from '../components/Sort';
 import Skeleton from '../components/pizzaItem/Skeleton';
 import PizzaItem from '../components/pizzaItem/PizzaItem';
 import Pagination from '../components/Pagination';
-
 import styles from '../assets/scss/app.module.css';
 
 import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategory, setCurrentPage } from '../redux/slices/filterSlice';
+import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 
 const Home = () => {
     const { search } = React.useContext(SearchContext);
-
-    const { category, sortProp, currentPage } = useSelector((state) => state.filter);
-    const sortType = sortProp.sortName;
-
     // const category = useSelector((state) => state.filter.category);
     // const sortType = useSelector((state) => state.filter.sortProp.sortName);
     // const pageCount = useSelector((state) => state.filter.currentPage);
+    const { category, sortProp, currentPage } = useSelector((state) => state.filter);
+    const sortType = sortProp.sortName;
     const dispatch = useDispatch();
+    // Для передачи параметров запроса в поисковую строку
+    const navigate = useNavigate();
+
+    const isSearch = React.useRef(false);
+    // для того чтобы при первой загрузке страницы в поисковой строке не оставались какое-либо данные из переменной navigate
+    const isMounted = React.useRef(false);
 
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
     const request = `?category=${category}`;
 
-    React.useEffect(() => {
+    const fetchPizzas = () => {
         setIsLoading(true);
 
         const categoryUrl = category > 0 ? `${request}&` : '?';
@@ -53,10 +59,51 @@ const Home = () => {
                 setIsLoading(false);
                 window.scroll(0, 0);
             });
-    }, [category, sortType, search, currentPage]);
+    };
+
+    // Проверка нужно ли вшивать параметры в URL
+    React.useEffect(() => {
+        if (isMounted.current) {
+            const queryStr = qs.stringify({
+                sortName: sortType,
+                category,
+                currentPage,
+            });
+            navigate(`?${queryStr}`);
+        }
+        isMounted.current = true;
+    }, [category, sortType, currentPage]);
     // deps[] используется для того чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
     // единожды при первой загрузке
+
+    // Если был первый рендер, то проверяем URL параметры и сохраняем в redux
+    React.useEffect(() => {
+        if (window.location.search) {
+            // получаем параметры запроса без первого символа "?"
+            const params = qs.parse(window.location.search.substring(1));
+
+            // в данном случае, нужно называть переменную также, как и в state redux, чтобы передавать в нее параметры
+            const sortProp = list.find((obj) => obj.sortName === params.sortName);
+            console.log(params);
+            // Передаем полученные параметры в redux
+            dispatch(
+                setFilters({
+                    ...params,
+                    sortProp,
+                }),
+            );
+            isSearch.current = true;
+        }
+    }, []);
+
+    // Если был первый рендер, то отправляем запрос
+    React.useEffect(() => {
+        if (!isSearch.current) {
+            fetchPizzas();
+        }
+        isSearch.current = false;
+    }, [category, sortType, search, currentPage]);
 
     // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
