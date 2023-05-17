@@ -14,9 +14,26 @@ export const list = [
 
 const Sort = () => {
     const [open, setOpen] = React.useState(false);
+    const sortRef = React.useRef();
 
     const sort = useSelector((state) => state.filter.sortProp);
     const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        const handleClick = (event) => {
+            if (event.target !== sortRef.current) {
+                setOpen(false);
+            }
+        };
+        // Так можно делать только в том случая когда такого элемента нет в данном компоненте,
+        // в отличных случаях используется useRef
+        document.body.addEventListener('click', handleClick);
+
+        // Нужно для размонтирования (Происходит после того как мы подпустим, перейдем на другую страницу)
+        return () => {
+            document.body.removeEventListener('click', handleClick);
+        };
+    }, []);
 
     return (
         <div className={styles.sort}>
@@ -48,7 +65,9 @@ const Sort = () => {
                     </svg>
                 )}
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpen(!open)}>{sort.name}</span>
+                <span ref={sortRef} onClick={() => setOpen(!open)}>
+                    {sort.name}
+                </span>
             </div>
             {open && (
                 <div className={styles.sort__popup}>
@@ -61,7 +80,7 @@ const Sort = () => {
                                     key={index}
                                     onClick={() => {
                                         dispatch(setSort(obj));
-                                        setOpen(false);
+                                        setOpen(!open);
                                     }}
                                     className={
                                         sort.sortName === obj.sortName ? `${styles.active}` : ''

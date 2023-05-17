@@ -22,6 +22,7 @@ const Home = () => {
     // const pageCount = useSelector((state) => state.filter.currentPage);
     const { category, sortProp, currentPage } = useSelector((state) => state.filter);
     const sortType = sortProp.sortName;
+
     const dispatch = useDispatch();
     // Для передачи параметров запроса в поисковую строку
     const navigate = useNavigate();
@@ -114,7 +115,7 @@ const Home = () => {
                 return true;
             }
         })
-        .map((item) => <PizzaItem key={item.id} {...item} />);
+        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
 
     return (
         <>

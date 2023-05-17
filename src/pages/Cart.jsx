@@ -1,7 +1,31 @@
-import styles from '../assets/scss/app.module.css';
+import React from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { clearCartItems } from '../redux/slices/cartSlice';
+
 import { Link } from 'react-router-dom';
+import { CartItem } from '../components/CartItem';
+
+import EmptyCart from '../components/EmptyCart';
+
+import styles from '../assets/scss/app.module.css';
 
 const Cart = () => {
+    const { cartItems, totalPrice } = useSelector((state) => state.cart);
+    const dispatch = useDispatch();
+
+    const totalCountItems = cartItems.reduce((sum, item) => (sum += item.count), 0);
+
+    const onClickClear = () => {
+        if (window.confirm('Вы действительно хотите очистить корзину?')) {
+            dispatch(clearCartItems());
+        }
+    };
+
+    if (cartItems.length === 0) {
+        return <EmptyCart />;
+    }
+
     return (
         <div className={`${styles.container} ${styles['container--cart']}`}>
             <div className={styles.cart}>
@@ -37,7 +61,7 @@ const Cart = () => {
                         </svg>
                         Корзина
                     </h2>
-                    <div className={styles.cart__clear}>
+                    <div onClick={onClickClear} className={styles.cart__clear}>
                         <svg
                             fill="none"
                             height="20"
@@ -76,13 +100,16 @@ const Cart = () => {
                         <span>Очистить корзину</span>
                     </div>
                 </div>
+                {cartItems.map((item) => {
+                    return <CartItem key={item.id} {...item} />;
+                })}
                 <div className={styles.cart__bottom}>
                     <div className={styles['cart__bottom-details']}>
                         <span>
-                            Всего пицц: <b>3 шт.</b>
+                            Всего пицц: <b>{totalCountItems} шт.</b>
                         </span>
                         <span>
-                            Сумма заказа: <b>900 ₽</b>
+                            Сумма заказа: <b>{totalPrice} ₽</b>
                         </span>
                     </div>
                     <div className={styles['cart__bottom-buttons']}>

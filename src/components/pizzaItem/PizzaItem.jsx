@@ -1,12 +1,33 @@
 import React from 'react';
 
 import styles from '../../assets/scss/app.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
 
 const typesPizza = ['тонкое', 'традиционное'];
 
-const PizzaItem = ({ price, title, imageUrl, types, sizes }) => {
+const PizzaItem = ({ id, price, title, imageUrl, types, sizes }) => {
     const [activeSize, setActiveSize] = React.useState(0);
     const [activeType, setActiveType] = React.useState(0);
+
+    // Вовсем нашем массиве ищем пиццу у которой есть такой же id
+    const countItems = useSelector((state) => state.cart.cartItems.find((obj) => obj.id === id));
+    const dispatch = useDispatch();
+
+    // Добавляем объект в наш slice, c выбранными параметрами
+    const addPizzaToCart = () => {
+        const item = {
+            id,
+            title,
+            // Только для того чтобы выглядело лучше :)
+            count: 0,
+            price,
+            imageUrl,
+            types: typesPizza[activeType],
+            size: sizes[activeSize],
+        };
+        dispatch(addToCart(item));
+    };
 
     return (
         <div className={styles['pizza-block']}>
@@ -42,7 +63,8 @@ const PizzaItem = ({ price, title, imageUrl, types, sizes }) => {
             </div>
             <div className={styles['pizza-block__bottom']}>
                 <div className={styles['pizza-block__price']}>от {price} ₽</div>
-                <div
+                <button
+                    onClick={() => addPizzaToCart()}
                     className={`${styles.button} ${styles['button--outline']} ${styles['button--add']}`}>
                     <svg
                         width="12"
@@ -56,8 +78,9 @@ const PizzaItem = ({ price, title, imageUrl, types, sizes }) => {
                         />
                     </svg>
                     <span>Добавить</span>
-                    <i>0</i>
-                </div>
+                    {/*Так как в массиве изначально нет ничего, нужно делать проверку, чтобы не было ошибок*/}
+                    {countItems ? <i>{countItems.count}</i> : ''}
+                </button>
             </div>
         </div>
     );
