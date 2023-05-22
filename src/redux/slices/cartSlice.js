@@ -27,7 +27,6 @@ export const cartSlice = createSlice({
                 return obj.price * obj.count + sum;
             }, 0);
         },
-
         decItems(state, action) {
             const findItem = state.cartItems.find((obj) => obj.id === action.payload);
             if (findItem) {

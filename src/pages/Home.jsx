@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 // Библиотека для извлечения и управления параметрами URL запроса
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +13,7 @@ import styles from '../assets/scss/app.module.css';
 import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { fetchItemsPizza } from '../redux/slices/fetchPizzaSlice';
 
 const Home = () => {
     const { search } = React.useContext(SearchContext);
@@ -22,6 +22,7 @@ const Home = () => {
     // const pageCount = useSelector((state) => state.filter.currentPage);
     const { category, sortProp, currentPage } = useSelector((state) => state.filter);
     const sortType = sortProp.sortName;
+    const { items, status } = useSelector((state) => state.pizzas);
 
     const dispatch = useDispatch();
     // Для передачи параметров запроса в поисковую строку
@@ -31,35 +32,26 @@ const Home = () => {
     // для того чтобы при первой загрузке страницы в поисковой строке не оставались какое-либо данные из переменной navigate
     const isMounted = React.useRef(false);
 
-    const [items, setItems] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(true);
-
     const request = `?category=${category}`;
 
-    const fetchPizzas = () => {
-        setIsLoading(true);
-
+    const fetchPizzas = async () => {
         const categoryUrl = category > 0 ? `${request}&` : '?';
         const sortBy = sortType.replace('-', '');
         // sort asc or desc
         const sortAD = sortType.includes('-') ? 'asc' : 'desc';
         const searchValue = search ? `&search=${search}` : '';
 
-        axios
-            .get(
-                `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
-            )
-            .then((res) => {
-                const newItems = res.data;
-                setItems(newItems);
-            })
-            .catch((error) => {
-                console.warn(error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-                window.scroll(0, 0);
-            });
+        dispatch(
+            fetchItemsPizza({
+                currentPage,
+                categoryUrl,
+                sortBy,
+                sortAD,
+                searchValue,
+            }),
+        );
+
+        window.scroll(0, 0);
     };
 
     // Проверка нужно ли вшивать параметры в URL
@@ -74,7 +66,7 @@ const Home = () => {
         }
         isMounted.current = true;
     }, [category, sortType, currentPage]);
-    // deps[] используется для того чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
+    // deps[] используется для того, чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
     // единожды при первой загрузке
 
@@ -86,7 +78,6 @@ const Home = () => {
 
             // в данном случае, нужно называть переменную также, как и в state redux, чтобы передавать в нее параметры
             const sortProp = list.find((obj) => obj.sortName === params.sortName);
-            console.log(params);
             // Передаем полученные параметры в redux
             dispatch(
                 setFilters({
@@ -136,7 +127,17 @@ const Home = () => {
                     <Sort />
                 </div>
                 <h2 className={styles.content__title}>Все пиццы</h2>
-                <div className={styles.content__items}>{isLoading ? skeleton : pizza}</div>
+                {status === 'error' ? (
+                    <div>
+                        <h2>Произошла ошибка</h2>
+                        <p>Попробуете перезагрузить страницу</p>
+                    </div>
+                ) : (
+                    <div className={styles.content__items}>
+                        {status === 'loading' ? skeleton : pizza}
+                    </div>
+                )}
+
                 <Pagination
                     currentPage={currentPage}
                     onChangePage={(number) => dispatch(setCurrentPage(number))}
