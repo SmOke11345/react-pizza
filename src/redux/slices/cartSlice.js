@@ -43,6 +43,9 @@ export const cartSlice = createSlice({
     },
 });
 
+// нужно для того чтобы, избавиться от повторяющегося кода
+export const cartSelector = (state) => state.cart;
+
 export const { addToCart, decItems, removeFromCart, clearCartItems } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -1,17 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 
-import App from './App.tsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { store } from './redux/store';
+
+import App from './App';
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import NotFound from './pages/NotFound';
+import AboutPizza from './pages/AboutPizza';
 
 import './index.css';
 
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <App />,
+        errorElement: <NotFound />,
+        children: [
+            {
+                path: '/',
+                element: <Home />,
+            },
+            {
+                path: 'pizza/:id',
+                element: <AboutPizza />,
+            },
+            {
+                path: '/cart',
+                element: <Cart />,
+            },
+        ],
+    },
+]);
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Provider store={store}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <RouterProvider router={router} />
     </Provider>,
 );

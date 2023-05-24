@@ -4,14 +4,15 @@ import React from 'react';
 // до тех пор, пока пользователь не перестанет вводить свой запрос
 // (но лучше найти что-то полегче, т.к нужно создавать контролируемый импут локально)
 import debounce from 'lodash.debounce';
+import { useDispatch } from 'react-redux';
+import { setSearchValue } from '../../redux/slices/filterSlice';
 
 import styles from './style.module.css';
-import { SearchContext } from '../../App';
 
 const Search = () => {
     const [value, setValue] = React.useState('');
 
-    const { setSearch } = React.useContext(SearchContext);
+    const dispatch = useDispatch();
 
     // Для обращения к DOM элемента в React
     const searchRef = React.useRef();
@@ -21,7 +22,7 @@ const Search = () => {
     // в deps указываются эти функции (на подобии useEffect), только в отличии от useEffect, он возвращает (отложенную)функцию.
     const LoadSearch = React.useCallback(
         debounce((value) => {
-            setSearch(value);
+            dispatch(setSearchValue(value));
         }, 1000),
         [],
     );
@@ -68,7 +69,7 @@ const Search = () => {
                     className={styles.close}
                     onClick={() => {
                         setValue('');
-                        setSearch('');
+                        dispatch(setSearchValue(''));
                         searchRef.current.focus();
                     }}
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    searchValue: '',
     category: 0,
     currentPage: 1,
     // можно сказать что это как бы стандартное значение, но в дальнейшем в этот объект будут добавляться новые
@@ -18,6 +19,9 @@ export const filterSlice = createSlice({
         setCategory(state, action) {
             state.category = action.payload;
         },
+        setSearchValue(state, action) {
+            state.searchValue = action.payload;
+        },
         setSort(state, action) {
             state.sortProp = action.payload;
         },
@@ -32,6 +36,7 @@ export const filterSlice = createSlice({
     },
 });
 // все методы хранятся в actions
-export const { setCategory, setSort, setCurrentPage, setFilters } = filterSlice.actions;
+export const { setCategory, setSort, setCurrentPage, setFilters, setSearchValue } =
+    filterSlice.actions;
 
 export default filterSlice.reducer;

@@ -1,7 +1,7 @@
 import React from 'react';
 // Библиотека для извлечения и управления параметрами URL запроса
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
@@ -10,19 +10,17 @@ import PizzaItem from '../components/pizzaItem/PizzaItem';
 import Pagination from '../components/Pagination';
 import styles from '../assets/scss/app.module.css';
 
-import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchItemsPizza } from '../redux/slices/fetchPizzaSlice';
 
 const Home = () => {
-    const { search } = React.useContext(SearchContext);
     // const category = useSelector((state) => state.filter.category);
     // const sortType = useSelector((state) => state.filter.sortProp.sortName);
     // const pageCount = useSelector((state) => state.filter.currentPage);
-    const { category, sortProp, currentPage } = useSelector((state) => state.filter);
-    const sortType = sortProp.sortName;
+    const { category, sortProp, currentPage, searchValue } = useSelector((state) => state.filter);
     const { items, status } = useSelector((state) => state.pizzas);
+    const sortType = sortProp.sortName;
 
     const dispatch = useDispatch();
     // Для передачи параметров запроса в поисковую строку
@@ -39,7 +37,7 @@ const Home = () => {
         const sortBy = sortType.replace('-', '');
         // sort asc or desc
         const sortAD = sortType.includes('-') ? 'asc' : 'desc';
-        const searchValue = search ? `&search=${search}` : '';
+        const _searchValue = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
             fetchItemsPizza({
@@ -47,7 +45,7 @@ const Home = () => {
                 categoryUrl,
                 sortBy,
                 sortAD,
-                searchValue,
+                _searchValue,
             }),
         );
 
@@ -95,19 +93,22 @@ const Home = () => {
             fetchPizzas();
         }
         isSearch.current = false;
-    }, [category, sortType, search, currentPage]);
+    }, [category, sortType, searchValue, currentPage]);
 
     // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
     const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
     const pizza = items
         .filter((obj) => {
-            if (obj.title.toLowerCase().includes(search.toLowerCase())) {
+            if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
                 return true;
             }
         })
-        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
-
+        .map((obj) => (
+            <Link key={obj.id} to={`/pizza/${obj.id}`}>
+                <PizzaItem {...obj} />
+            </Link>
+        ));
     return (
         <>
             <div className={styles.container}>

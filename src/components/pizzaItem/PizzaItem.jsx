@@ -19,8 +19,10 @@ const PizzaItem = ({ id, price, title, imageUrl, types, sizes }) => {
         const item = {
             id,
             title,
+
             // Только для того чтобы выглядело лучше :)
             count: 0,
+
             price,
             imageUrl,
             types: typesPizza[activeType],

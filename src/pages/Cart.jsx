@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCartItems } from '../redux/slices/cartSlice';
+
+// рефакторинг кода
+import { cartSelector, clearCartItems } from '../redux/slices/cartSlice';
 
 import { Link } from 'react-router-dom';
 import { CartItem } from '../components/CartItem';
@@ -11,7 +13,7 @@ import EmptyCart from '../components/EmptyCart';
 import styles from '../assets/scss/app.module.css';
 
 const Cart = () => {
-    const { cartItems, totalPrice } = useSelector((state) => state.cart);
+    const { cartItems, totalPrice } = useSelector(cartSelector);
     const dispatch = useDispatch();
 
     const totalCountItems = cartItems.reduce((sum, item) => (sum += item.count), 0);
