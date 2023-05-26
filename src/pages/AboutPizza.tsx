@@ -1,14 +1,20 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Link, useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styles from '../assets/scss/app.module.css';
 
-const AboutPizza = () => {
-    const [pizza, setPizza] = React.useState();
-    // Чтобы вытаскивать параметры из строки
+interface IPizza {
+    title: string;
+    price: number;
+    imageUrl: string;
+}
+
+const AboutPizza: React.FC = () => {
+    const [pizza, setPizza] = React.useState<IPizza>();
+
+    // Чтобы вытаскивать параметры из строки поиска
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -21,6 +27,7 @@ const AboutPizza = () => {
                 setPizza(data);
             } catch (error) {
                 console.warn(error);
+                navigate('/');
             }
         };
         fetchPizza();

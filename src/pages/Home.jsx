@@ -1,7 +1,7 @@
 import React from 'react';
 // Библиотека для извлечения и управления параметрами URL запроса
 import qs from 'qs';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
@@ -104,11 +104,7 @@ const Home = () => {
                 return true;
             }
         })
-        .map((obj) => (
-            <Link key={obj.id} to={`/pizza/${obj.id}`}>
-                <PizzaItem {...obj} />
-            </Link>
-        ));
+        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
     return (
         <>
             <div className={styles.container}>

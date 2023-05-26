@@ -3,6 +3,7 @@ import React from 'react';
 import styles from '../../assets/scss/app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
 const typesPizza = ['тонкое', 'традиционное'];
 
@@ -33,7 +34,9 @@ const PizzaItem = ({ id, price, title, imageUrl, types, sizes }) => {
 
     return (
         <div className={styles['pizza-block']}>
-            <img className={styles['pizza-block__image']} src={imageUrl} alt="Pizza" />
+            <Link to={`/pizza/${id}`}>
+                <img className={styles['pizza-block__image']} src={imageUrl} alt="Pizza" />
+            </Link>
             <h4 className={styles['pizza-block__title']}>{title}</h4>
             <div className={styles['pizza-block__selector']}>
                 <ul>

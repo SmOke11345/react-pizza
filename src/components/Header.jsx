@@ -15,8 +15,6 @@ const Header = () => {
     // использует window.location и перерисовывает компонент(что очень важно)
     const cartHidden = useLocation();
 
-    console.log(cartHidden);
-
     const totalCountItems = cartItems.reduce((sum, item) => (sum += item.count), 0);
 
     return (
