@@ -9,13 +9,13 @@ import { setSearchValue } from '../../redux/slices/filterSlice';
 
 import styles from './style.module.css';
 
-const Search = () => {
-    const [value, setValue] = React.useState('');
+const Search: React.FC = () => {
+    const [value, setValue] = React.useState<string>('');
 
     const dispatch = useDispatch();
 
     // Для обращения к DOM элемента в React
-    const searchRef = React.useRef();
+    const searchRef = React.useRef<HTMLInputElement>(null!);
 
     // useCallback, используется для того чтобы, обозначить те функции,
     // которые не нужно каждый раз пересоздавать (создай только один раз и больше не пересоздавай),
@@ -57,7 +57,7 @@ const Search = () => {
                 ref={searchRef}
                 className={styles.search}
                 value={value}
-                onChange={(event) => {
+                onChange={(event: any) => {
                     setValue(event.target.value);
                     LoadSearch(event.target.value);
                 }}
@@ -70,7 +70,7 @@ const Search = () => {
                     onClick={() => {
                         setValue('');
                         dispatch(setSearchValue(''));
-                        searchRef.current.focus();
+                        searchRef.current?.focus();
                     }}
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"

@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styles from '../assets/scss/app.module.css';
 
+// Делаем интерфейс, т.к типизируем объект
 interface IPizza {
     title: string;
     price: number;

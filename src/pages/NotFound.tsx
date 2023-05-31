@@ -1,7 +1,8 @@
-import styles from '../assets/scss/app.module.css';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import styles from '../assets/scss/app.module.css';
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
     return (
         <div
             className={styles.container}

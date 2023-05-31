@@ -3,7 +3,13 @@ import styles from '../assets/scss/app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
 
-export const list = [
+// Для создания своего типа данных
+type SortType = {
+    name: string;
+    sortName: string;
+};
+
+export const list: SortType[] = [
     { name: 'популярности (↓)', sortName: 'rating' },
     { name: 'популярности (↑)', sortName: '-rating' },
     { name: 'цене (↓)', sortName: 'price' },
@@ -12,15 +18,18 @@ export const list = [
     { name: 'алфавиту (↑)', sortName: '-title' },
 ];
 
-const Sort = () => {
+const Sort: React.FC = () => {
     const [open, setOpen] = React.useState(false);
-    const sortRef = React.useRef();
+
+    // Смотрим тип данных у элемента к которому мы добавляем useRef и по умолчанию нужно хранить null
+    const sortRef = React.useRef<HTMLSpanElement>(null!);
 
     const sort = useSelector((state) => state.filter.sortProp);
+
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        const handleClick = (event) => {
+        const handleClick = (event: any) => {
             if (event.target !== sortRef.current) {
                 setOpen(false);
             }
@@ -29,7 +38,7 @@ const Sort = () => {
         // в отличных случаях используется useRef
         document.body.addEventListener('click', handleClick);
 
-        // Нужно для размонтирования (Происходит после того как мы подпустим, перейдем на другую страницу)
+        // Нужно для размонтирования (Происходит после того как мы допустим, перейдем на другую страницу)
         return () => {
             document.body.removeEventListener('click', handleClick);
         };

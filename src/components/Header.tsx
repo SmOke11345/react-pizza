@@ -9,13 +9,13 @@ import { useSelector } from 'react-redux';
 // рефакторинг кода
 import { cartSelector } from '../redux/slices/cartSlice';
 
-const Header = () => {
+const Header: React.FC = () => {
     const { cartItems, totalPrice } = useSelector(cartSelector);
 
     // использует window.location и перерисовывает компонент(что очень важно)
     const cartHidden = useLocation();
 
-    const totalCountItems = cartItems.reduce((sum, item) => (sum += item.count), 0);
+    const totalCountItems = cartItems.reduce((sum: number, item: any) => (sum += item.count), 0);
 
     return (
         <div className={styles.header}>

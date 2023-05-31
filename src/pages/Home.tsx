@@ -6,15 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import Skeleton from '../components/pizzaItem/Skeleton';
-import PizzaItem from '../components/pizzaItem/PizzaItem';
+import PizzaItem from '../components/pizzaItem';
 import Pagination from '../components/Pagination';
-import styles from '../assets/scss/app.module.css';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchItemsPizza } from '../redux/slices/fetchPizzaSlice';
 
-const Home = () => {
+import styles from '../assets/scss/app.module.css';
+
+const Home: React.FC = () => {
     // const category = useSelector((state) => state.filter.category);
     // const sortType = useSelector((state) => state.filter.sortProp.sortName);
     // const pageCount = useSelector((state) => state.filter.currentPage);
@@ -104,7 +105,7 @@ const Home = () => {
                 return true;
             }
         })
-        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
+        .map((obj: any) => <PizzaItem key={obj.id} {...obj} />);
     return (
         <>
             <div className={styles.container}>
@@ -137,7 +138,7 @@ const Home = () => {
 
                 <Pagination
                     currentPage={currentPage}
-                    onChangePage={(number) => dispatch(setCurrentPage(number))}
+                    onChangePage={(page: number) => dispatch(setCurrentPage(page))}
                 />
             </div>
         </>

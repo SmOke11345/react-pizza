@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import emptyCart from '../assets/img/empty-cart.png';
 import styles from '../assets/scss/app.module.css';
 
-const EmptyCart = () => {
+const EmptyCart: React.FC = () => {
     return (
         <div className={styles.content}>
             <div className={`${styles.container} ${styles['container--cart']}`}>

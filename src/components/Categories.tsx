@@ -4,7 +4,12 @@ import styles from '../assets/scss/app.module.css';
 
 const initCategory = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-const Categories = ({ value, onChangeCategory }) => {
+type CategoriesProps = {
+    value: number;
+    onChangeCategory: (index: number) => void;
+};
+
+const Categories: React.FC<CategoriesProps> = ({ value, onChangeCategory }) => {
     return (
         <div className={styles.categories}>
             <ul>

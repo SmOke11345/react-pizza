@@ -1,8 +1,27 @@
-import styles from '../assets/scss/app.module.css';
 import { useDispatch } from 'react-redux';
 import { addToCart, decItems, removeFromCart } from '../redux/slices/cartSlice';
 
-export const CartItem = ({ id, count, imageUrl, price, size, title, types }) => {
+import styles from '../assets/scss/app.module.css';
+
+type CartItemProps = {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    count: number;
+    size: number;
+    types: string;
+};
+
+export const CartItem: React.FC<CartItemProps> = ({
+    id,
+    count,
+    imageUrl,
+    price,
+    size,
+    title,
+    types,
+}) => {
     const dispatch = useDispatch();
 
     const onClickRemove = () => {

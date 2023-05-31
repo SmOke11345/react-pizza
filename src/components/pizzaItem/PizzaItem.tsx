@@ -1,15 +1,25 @@
 import React from 'react';
 
-import styles from '../../assets/scss/app.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
+import styles from '../../assets/scss/app.module.css';
+
 const typesPizza = ['тонкое', 'традиционное'];
 
-const PizzaItem = ({ id, price, title, imageUrl, types, sizes }) => {
-    const [activeSize, setActiveSize] = React.useState(0);
-    const [activeType, setActiveType] = React.useState(0);
+type PizzaItemProps = {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    types: number[];
+    sizes: number[];
+};
+
+const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types, sizes }) => {
+    const [activeSize, setActiveSize] = React.useState<number>(0);
+    const [activeType, setActiveType] = React.useState<number>(0);
 
     // Вовсем нашем массиве ищем пиццу у которой есть такой же id
     const countItems = useSelector((state) => state.cart.cartItems.find((obj) => obj.id === id));
