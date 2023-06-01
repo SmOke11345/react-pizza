@@ -29,8 +29,8 @@ const Sort: React.FC = () => {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        const handleClick = (event: any) => {
-            if (event.target !== sortRef.current) {
+        const handleClick = (event: MouseEvent) => {
+            if (sortRef.current && event.target !== sortRef.current) {
                 setOpen(false);
             }
         };

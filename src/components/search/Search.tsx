@@ -53,11 +53,13 @@ const Search: React.FC = () => {
                     strokeLinejoin="round"
                 />
             </svg>
+            {/* На подобии с useRef смотрим через подсказку (при наведении на onChange) 
+            в <> ставим interface родителя этого метода*/}
             <input
                 ref={searchRef}
                 className={styles.search}
                 value={value}
-                onChange={(event: any) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     setValue(event.target.value);
                     LoadSearch(event.target.value);
                 }}
