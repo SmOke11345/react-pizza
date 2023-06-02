@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { addToCart } from '../../redux/slices/cartSlice';
+import { addToCart, Items } from '../../redux/slices/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hook.ts';
 
 import styles from '../../assets/scss/app.module.css';
@@ -10,10 +10,10 @@ const typesPizza = ['тонкое', 'традиционное'];
 
 type PizzaItemProps = {
     id: string;
-    title: string;
     price: number;
+    title: string;
     imageUrl: string;
-    types: number[];
+    types: string[];
     sizes: number[];
 };
 
@@ -27,7 +27,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
 
     // Добавляем объект в наш slice, c выбранными параметрами
     const addPizzaToCart = () => {
-        const item = {
+        const item: Items = {
             id,
             title,
 
@@ -37,7 +37,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
             price,
             imageUrl,
             types: typesPizza[activeType],
-            size: sizes[activeSize],
+            sizes: sizes[activeSize],
         };
         dispatch(addToCart(item));
     };
@@ -58,6 +58,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
                                     setActiveType(index);
                                 }}
                                 className={activeType === index ? `${styles.active}` : ''}>
+                                {/*@ts-ignore*/}
                                 {typesPizza[type]}
                             </li>
                         );

@@ -1,16 +1,12 @@
 import React from 'react';
-import { setSort } from '../redux/slices/filterSlice';
+import { setSort, SortProp } from '../redux/slices/filterSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
 
 import styles from '../assets/scss/app.module.css';
 
 // Для создания своего типа данных
-type SortType = {
-    name: string;
-    sortName: string;
-};
 
-export const list: SortType[] = [
+export const list: SortProp[] = [
     { name: 'популярности (↓)', sortName: 'rating' },
     { name: 'популярности (↑)', sortName: '-rating' },
     { name: 'цене (↓)', sortName: 'price' },

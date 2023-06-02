@@ -44,7 +44,6 @@ const Home: React.FC = () => {
         const _searchValue = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
-            // @ts-ignore
             fetchItemsPizza({
                 currentPage,
                 categoryUrl,
@@ -104,12 +103,12 @@ const Home: React.FC = () => {
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
     const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
     const pizza = items
-        .filter((obj: any) => {
+        .filter((obj) => {
             if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
                 return true;
             }
         })
-        .map((obj: any) => <PizzaItem key={obj.id} {...obj} />);
+        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
     return (
         <>
             <div className={styles.container}>

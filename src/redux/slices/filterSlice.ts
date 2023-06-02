@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type SortProp = {
+export type SortProp = {
     name: string;
     sortName: 'rating' | 'price' | 'title' | '-rating' | '-price' | '-title';
 };
@@ -28,19 +28,19 @@ export const filterSlice = createSlice({
     initialState,
     reducers: {
         // action используется для передачи значений
-        setCategory(state, action) {
+        setCategory(state, action: PayloadAction<number>) {
             state.category = action.payload;
         },
-        setSearchValue(state, action) {
+        setSearchValue(state, action: PayloadAction<string>) {
             state.searchValue = action.payload;
         },
-        setSort(state, action) {
+        setSort(state, action: PayloadAction<SortProp>) {
             state.sortProp = action.payload;
         },
-        setCurrentPage(state, action) {
+        setCurrentPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload;
         },
-        setFilters(state, action) {
+        setFilters(state, action: PayloadAction<FilterSliceProp>) {
             state.sortProp = action.payload.sortProp;
             state.currentPage = Number(action.payload.currentPage);
             state.category = Number(action.payload.category);

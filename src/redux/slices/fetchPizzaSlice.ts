@@ -1,29 +1,27 @@
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Items } from './cartSlice.ts';
 
-type ItemsType = {
-    id: string;
-    title: string;
-    price: number;
-    imageUrl: string;
-    types: number[];
-    sizes: number[];
-    count: number;
-};
+// Используется для краткости написания кода,
+// к примеру когда все параметры string
+type fetchPizzaArgs = Record<string, string>;
 
 interface FetchPizzaProp {
-    items: ItemsType[];
+    items: Items[];
     status: 'loading' | 'success' | 'error';
 }
 
-export const fetchItemsPizza = createAsyncThunk('pizzas/fetchItems', async (params, thunkApi) => {
-    const { currentPage, categoryUrl, sortBy, sortAD, searchValue } = params;
-    const { data } = await axios.get(
-        `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
-    );
+export const fetchItemsPizza = createAsyncThunk<Items[], fetchPizzaArgs>(
+    'pizzas/fetchItems',
+    async (params) => {
+        const { currentPage, categoryUrl, sortBy, sortAD, searchValue } = params;
+        const { data } = await axios.get<Items[]>(
+            `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
+        );
 
-    return data;
-});
+        return data;
+    },
+);
 
 const initialState: FetchPizzaProp = {
     items: [],
@@ -35,23 +33,36 @@ const fetchPizzaSlice = createSlice({
     initialState,
     reducers: {},
     // Нужен для дополнительных функций (Большая гибкость)
-    extraReducers: {
-        // Загрузка
-        [fetchItemsPizza.pending]: (state) => {
+    extraReducers: (builder) => {
+        builder.addCase(fetchItemsPizza.pending, (state) => {
             state.status = 'loading';
             // Для отчистки старых элементов после изменения параметров фильтрации
             state.items = [];
-        },
-        // Все нормально
-        [fetchItemsPizza.fulfilled]: (state, action) => {
+        });
+        builder.addCase(fetchItemsPizza.fulfilled, (state, action) => {
             state.items = action.payload;
             state.status = 'success';
-        },
-        // Если произошла ошибка
-        [fetchItemsPizza.rejected]: (state) => {
+        });
+        builder.addCase(fetchItemsPizza.rejected, (state) => {
             state.status = 'error';
             state.items = [];
-        },
+        });
+        //         // Загрузка
+        //         [fetchItemsPizza.pending]: (state) => {
+        //         state.status = 'loading';
+        //         // Для отчистки старых элементов после изменения параметров фильтрации
+        //         state.items = [];
+        //     },
+        //         // Все нормально
+        //         [fetchItemsPizza.fulfilled]: (state, action) => {
+        //         state.items = action.payload;
+        //         state.status = 'success';
+        //     },
+        //         // Если произошла ошибка
+        //         [fetchItemsPizza.rejected]: (state) => {
+        //         state.status = 'error';
+        //         state.items = [];
+        //     },
     },
 });
 

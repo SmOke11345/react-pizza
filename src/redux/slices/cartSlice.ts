@@ -1,18 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store.ts';
 
-type ItemsType = {
+export type Items = {
     id: string;
     title: string;
     price: number;
     imageUrl: string;
-    types: number[];
-    sizes: number[];
+    types: string;
+    sizes: number;
     count: number;
 };
 
 interface CartItemProp {
-    cartItems: ItemsType[];
+    cartItems: Items[];
     totalPrice: number;
 }
 
@@ -25,7 +25,7 @@ export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addToCart(state, action) {
+        addToCart(state, action: PayloadAction<Items>) {
             // Ищем есть ли такой похожий объект в массиве
             const findItem = state.cartItems.find((obj) => obj.id === action.payload.id);
 
@@ -43,13 +43,13 @@ export const cartSlice = createSlice({
                 return obj.price * obj.count + sum;
             }, 0);
         },
-        decItems(state, action) {
+        decItems(state, action: PayloadAction<string>) {
             const findItem = state.cartItems.find((obj) => obj.id === action.payload);
             if (findItem) {
                 findItem.count--;
             }
         },
-        removeFromCart(state, action) {
+        removeFromCart(state, action: PayloadAction<string>) {
             state.cartItems = state.cartItems.filter((obj) => obj.id !== action.payload);
         },
         clearCartItems(state) {

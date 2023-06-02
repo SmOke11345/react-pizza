@@ -9,9 +9,9 @@ type CartItemProps = {
     title: string;
     price: number;
     imageUrl: string;
-    count: number;
     size: number;
     types: string;
+    count: number;
 };
 
 export const CartItem: React.FC<CartItemProps> = ({
@@ -40,7 +40,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                 <div className={styles['cart__item-info']}>
                     <h3>{title}</h3>
                     <p>
-                        {types} тесто, {size} см.
+                        {types} тесто, {sizes} см.
                     </p>
                 </div>
                 <div className={styles['cart__item-count']}>
