@@ -1,6 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+type SortProp = {
+    name: string;
+    sortName: 'rating' | 'price' | 'title' | '-rating' | '-price' | '-title';
+};
+
+interface FilterSliceProp {
+    searchValue: string;
+    category: number;
+    currentPage: number;
+    sortProp: SortProp;
+}
+
+const initialState: FilterSliceProp = {
     searchValue: '',
     category: 0,
     currentPage: 1,

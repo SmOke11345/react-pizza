@@ -1,6 +1,21 @@
 import axios from 'axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+type ItemsType = {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    types: number[];
+    sizes: number[];
+    count: number;
+};
+
+interface FetchPizzaProp {
+    items: ItemsType[];
+    status: 'loading' | 'success' | 'error';
+}
+
 export const fetchItemsPizza = createAsyncThunk('pizzas/fetchItems', async (params, thunkApi) => {
     const { currentPage, categoryUrl, sortBy, sortAD, searchValue } = params;
     const { data } = await axios.get(
@@ -10,7 +25,7 @@ export const fetchItemsPizza = createAsyncThunk('pizzas/fetchItems', async (para
     return data;
 });
 
-const initialState = {
+const initialState: FetchPizzaProp = {
     items: [],
     status: 'loading', // loading | success | error
 };

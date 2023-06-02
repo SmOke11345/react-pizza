@@ -1,8 +1,8 @@
 import React from 'react';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
+
+import { addToCart } from '../../redux/slices/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hook.ts';
 
 import styles from '../../assets/scss/app.module.css';
 
@@ -22,8 +22,8 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
     const [activeType, setActiveType] = React.useState<number>(0);
 
     // Вовсем нашем массиве ищем пиццу у которой есть такой же id
-    const countItems = useSelector((state) => state.cart.cartItems.find((obj) => obj.id === id));
-    const dispatch = useDispatch();
+    const countItems = useAppSelector((state) => state.cart.cartItems.find((obj) => obj.id === id));
+    const dispatch = useAppDispatch();
 
     // Добавляем объект в наш slice, c выбранными параметрами
     const addPizzaToCart = () => {

@@ -1,5 +1,6 @@
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { addToCart, decItems, removeFromCart } from '../redux/slices/cartSlice';
+import { useAppDispatch } from '../redux/hook.ts';
 
 import styles from '../assets/scss/app.module.css';
 
@@ -22,7 +23,7 @@ export const CartItem: React.FC<CartItemProps> = ({
     title,
     types,
 }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const onClickRemove = () => {
         if (window.confirm('Вы уверены?')) {

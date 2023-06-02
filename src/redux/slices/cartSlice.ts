@@ -1,6 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../store.ts';
 
-const initialState = {
+type ItemsType = {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    types: number[];
+    sizes: number[];
+    count: number;
+};
+
+interface CartItemProp {
+    cartItems: ItemsType[];
+    totalPrice: number;
+}
+
+const initialState: CartItemProp = {
     cartItems: [],
     totalPrice: 0,
 };
@@ -44,7 +60,7 @@ export const cartSlice = createSlice({
 });
 
 // нужно для того чтобы, избавиться от повторяющегося кода
-export const cartSelector = (state) => state.cart;
+export const cartSelector = (state: RootState) => state.cart;
 
 export const { addToCart, decItems, removeFromCart, clearCartItems } = cartSlice.actions;
 

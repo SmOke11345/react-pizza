@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from '../assets/scss/app.module.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../redux/slices/filterSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
+
+import styles from '../assets/scss/app.module.css';
 
 // Для создания своего типа данных
 type SortType = {
@@ -24,9 +25,9 @@ const Sort: React.FC = () => {
     // Смотрим тип данных у элемента к которому мы добавляем useRef и по умолчанию нужно хранить null
     const sortRef = React.useRef<HTMLSpanElement>(null!);
 
-    const sort = useSelector((state) => state.filter.sortProp);
+    const sort = useAppSelector((state) => state.filter.sortProp);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         const handleClick = (event: MouseEvent) => {

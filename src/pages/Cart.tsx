@@ -1,9 +1,7 @@
 import React from 'react';
-
-import { useDispatch, useSelector } from 'react-redux';
-
 // рефакторинг кода
 import { cartSelector, clearCartItems } from '../redux/slices/cartSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
 
 import { Link } from 'react-router-dom';
 import { CartItem } from '../components/CartItem';
@@ -12,9 +10,9 @@ import EmptyCart from '../components/EmptyCart';
 
 import styles from '../assets/scss/app.module.css';
 
-const Cart = () => {
-    const { cartItems, totalPrice } = useSelector(cartSelector);
-    const dispatch = useDispatch();
+const Cart: React.FC = () => {
+    const { cartItems, totalPrice } = useAppSelector(cartSelector);
+    const dispatch = useAppDispatch();
 
     const totalCountItems = cartItems.reduce((sum: number, item: any) => sum + item.count, 0);
 
@@ -102,7 +100,7 @@ const Cart = () => {
                         <span>Очистить корзину</span>
                     </div>
                 </div>
-                {cartItems.map((item) => {
+                {cartItems.map((item: any) => {
                     return <CartItem key={item.id} {...item} />;
                 })}
                 <div className={styles.cart__bottom}>

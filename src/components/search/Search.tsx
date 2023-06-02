@@ -6,13 +6,14 @@ import React from 'react';
 import debounce from 'lodash.debounce';
 import { useDispatch } from 'react-redux';
 import { setSearchValue } from '../../redux/slices/filterSlice';
+import { AppDispatch } from '../../redux/store.ts';
 
 import styles from './style.module.css';
 
 const Search: React.FC = () => {
     const [value, setValue] = React.useState<string>('');
 
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
 
     // Для обращения к DOM элемента в React
     const searchRef = React.useRef<HTMLInputElement>(null!);

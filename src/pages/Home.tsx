@@ -1,5 +1,6 @@
 import React from 'react';
 // Библиотека для извлечения и управления параметрами URL запроса
+// @ts-ignore
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +10,7 @@ import Skeleton from '../components/pizzaItem/Skeleton';
 import PizzaItem from '../components/pizzaItem';
 import Pagination from '../components/Pagination';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchItemsPizza } from '../redux/slices/fetchPizzaSlice';
 
@@ -19,11 +20,13 @@ const Home: React.FC = () => {
     // const category = useSelector((state) => state.filter.category);
     // const sortType = useSelector((state) => state.filter.sortProp.sortName);
     // const pageCount = useSelector((state) => state.filter.currentPage);
-    const { category, sortProp, currentPage, searchValue } = useSelector((state) => state.filter);
-    const { items, status } = useSelector((state) => state.pizzas);
+    const { category, sortProp, currentPage, searchValue } = useAppSelector(
+        (state) => state.filter,
+    );
+    const { items, status } = useAppSelector((state) => state.pizzas);
     const sortType = sortProp.sortName;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     // Для передачи параметров запроса в поисковую строку
     const navigate = useNavigate();
 
@@ -41,6 +44,7 @@ const Home: React.FC = () => {
         const _searchValue = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
+            // @ts-ignore
             fetchItemsPizza({
                 currentPage,
                 categoryUrl,
@@ -100,7 +104,7 @@ const Home: React.FC = () => {
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
     const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
     const pizza = items
-        .filter((obj) => {
+        .filter((obj: any) => {
             if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
                 return true;
             }

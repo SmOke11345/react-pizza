@@ -4,13 +4,13 @@ import pizzaLogo from '../assets/img/pizza-logo.svg';
 import styles from '../assets/scss/app.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import Search from './search/Search';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../redux/hook.ts';
 
 // рефакторинг кода
 import { cartSelector } from '../redux/slices/cartSlice';
 
 const Header: React.FC = () => {
-    const { cartItems, totalPrice } = useSelector(cartSelector);
+    const { cartItems, totalPrice } = useAppSelector(cartSelector);
 
     // использует window.location и перерисовывает компонент(что очень важно)
     const cartHidden = useLocation();
