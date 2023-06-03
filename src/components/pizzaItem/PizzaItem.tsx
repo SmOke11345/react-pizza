@@ -13,7 +13,7 @@ type PizzaItemProps = {
     price: number;
     title: string;
     imageUrl: string;
-    types: string[];
+    types: number[];
     sizes: number[];
 };
 

@@ -1,28 +1,10 @@
 import React from 'react';
-import { addToCart, decItems, removeFromCart } from '../redux/slices/cartSlice';
+import { addToCart, decItems, Items, removeFromCart } from '../redux/slices/cartSlice';
 import { useAppDispatch } from '../redux/hook.ts';
 
 import styles from '../assets/scss/app.module.css';
 
-type CartItemProps = {
-    id: string;
-    title: string;
-    price: number;
-    imageUrl: string;
-    size: number;
-    types: string;
-    count: number;
-};
-
-export const CartItem: React.FC<CartItemProps> = ({
-    id,
-    count,
-    imageUrl,
-    price,
-    size,
-    title,
-    types,
-}) => {
+export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, title, types }) => {
     const dispatch = useAppDispatch();
 
     const onClickRemove = () => {
@@ -65,7 +47,10 @@ export const CartItem: React.FC<CartItemProps> = ({
                     </div>
                     <b>{count}</b>
                     <div
-                        onClick={() => dispatch(addToCart({ id }))}
+                        onClick={() => {
+                            // @ts-ignore
+                            return dispatch(addToCart({ id }));
+                        }}
                         className={`${styles.button} ${styles['button--outline']} ${styles['button--circle']} ${styles['cart__item-count-plus']}`}>
                         <svg
                             fill="none"

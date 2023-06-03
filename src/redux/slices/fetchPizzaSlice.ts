@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Items } from './cartSlice.ts';
 
 // Используется для краткости написания кода,
-// к примеру когда все параметры string
+// к примеру когда все параметры string и первое значение number
 type fetchPizzaArgs = Record<string, string>;
 
 interface FetchPizzaProp {
@@ -15,7 +15,7 @@ export const fetchItemsPizza = createAsyncThunk<Items[], fetchPizzaArgs>(
     'pizzas/fetchItems',
     async (params) => {
         const { currentPage, categoryUrl, sortBy, sortAD, searchValue } = params;
-        const { data } = await axios.get<Items[]>(
+        const { data } = await axios.get(
             `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
         );
 

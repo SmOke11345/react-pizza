@@ -45,7 +45,7 @@ const Home: React.FC = () => {
 
         dispatch(
             fetchItemsPizza({
-                currentPage,
+                currentPage: currentPage.toString(),
                 categoryUrl,
                 sortBy,
                 sortAD,
@@ -102,13 +102,17 @@ const Home: React.FC = () => {
     // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
     const skeleton = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
+
     const pizza = items
         .filter((obj) => {
             if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
                 return true;
             }
         })
-        .map((obj) => <PizzaItem key={obj.id} {...obj} />);
+        .map((obj) => {
+            // @ts-ignore
+            return <PizzaItem key={obj.id} {...obj} />;
+        });
     return (
         <>
             <div className={styles.container}>

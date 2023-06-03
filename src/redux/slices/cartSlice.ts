@@ -6,8 +6,8 @@ export type Items = {
     title: string;
     price: number;
     imageUrl: string;
-    types: string;
-    sizes: number;
+    types: number[] | string;
+    sizes: number[] | number;
     count: number;
 };
 

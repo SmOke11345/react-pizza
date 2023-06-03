@@ -14,7 +14,7 @@ const Cart: React.FC = () => {
     const { cartItems, totalPrice } = useAppSelector(cartSelector);
     const dispatch = useAppDispatch();
 
-    const totalCountItems = cartItems.reduce((sum: number, item: any) => sum + item.count, 0);
+    const totalCountItems = cartItems.reduce((sum: number, item) => sum + item.count, 0);
 
     const onClickClear = () => {
         if (window.confirm('Вы действительно хотите очистить корзину?')) {
@@ -100,7 +100,7 @@ const Cart: React.FC = () => {
                         <span>Очистить корзину</span>
                     </div>
                 </div>
-                {cartItems.map((item: any) => {
+                {cartItems.map((item) => {
                     return <CartItem key={item.id} {...item} />;
                 })}
                 <div className={styles.cart__bottom}>
