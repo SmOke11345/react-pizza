@@ -12,7 +12,7 @@ import Pagination from '../components/Pagination';
 
 import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchItemsPizza } from '../redux/slices/fetchPizzaSlice';
+import { fetchItemsPizza, fetchPizzaArgs } from '../redux/slices/fetchPizzaSlice';
 
 import styles from '../assets/scss/app.module.css';
 
@@ -41,15 +41,15 @@ const Home: React.FC = () => {
         const sortBy = sortType.replace('-', '');
         // sort asc or desc
         const sortAD = sortType.includes('-') ? 'asc' : 'desc';
-        const _searchValue = searchValue ? `&search=${searchValue}` : '';
+        const search = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
             fetchItemsPizza({
-                currentPage: currentPage.toString(),
                 categoryUrl,
                 sortBy,
                 sortAD,
-                _searchValue,
+                currentPage: currentPage.toString(),
+                search,
             }),
         );
 
@@ -72,32 +72,35 @@ const Home: React.FC = () => {
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
     // единожды при первой загрузке
 
+    // Если был первый рендер, то отправляем запрос
+    React.useEffect(() => {
+        fetchPizzas();
+    }, [category, sortType, searchValue, currentPage]);
+
     // Если был первый рендер, то проверяем URL параметры и сохраняем в redux
     React.useEffect(() => {
         if (window.location.search) {
             // получаем параметры запроса без первого символа "?"
-            const params = qs.parse(window.location.search.substring(1));
+            const params = qs.parse(
+                window.location.search.substring(1) as unknown,
+            ) as fetchPizzaArgs;
 
             // в данном случае, нужно называть переменную также, как и в state redux, чтобы передавать в нее параметры
-            const sortProp = list.find((obj) => obj.sortName === params.sortName);
+            const sortProp = list.find((obj) => obj.sortName === params.sortBy);
+
             // Передаем полученные параметры в redux
             dispatch(
                 setFilters({
-                    ...params,
-                    sortProp,
+                    searchValue: params.search,
+                    category: Number(params.categoryUrl),
+                    currentPage: Number(params.currentPage),
+                    // чтобы избежать получения неизвестного (undefined) параметра
+                    sortProp: sortProp || list[0],
                 }),
             );
             isSearch.current = true;
         }
     }, []);
-
-    // Если был первый рендер, то отправляем запрос
-    React.useEffect(() => {
-        if (!isSearch.current) {
-            fetchPizzas();
-        }
-        isSearch.current = false;
-    }, [category, sortType, searchValue, currentPage]);
 
     // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
     // элементов skeleton, так же чтобы при первой загрузке контент не прыгал
@@ -118,7 +121,7 @@ const Home: React.FC = () => {
             <div className={styles.container}>
                 <div className={styles.content__top}>
                     {/*
-                     чтобы передать параметры нужно все state из дочерних компонентов перенести в родительский, и
+                     чтобы передать параметры, нужно все state из дочерних компонентов перенести в родительский, и
                      далее передать эти параметры в качестве пропсов, в свою очередь пропсы должны взять
                      значения из дочерних компонентов и передать их в родительский state 
                      */}

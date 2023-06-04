@@ -1,5 +1,5 @@
 import React from 'react';
-import { setSort, SortProp } from '../redux/slices/filterSlice';
+import { setSort, SortEnum, SortProp } from '../redux/slices/filterSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
 
 import styles from '../assets/scss/app.module.css';
@@ -7,12 +7,12 @@ import styles from '../assets/scss/app.module.css';
 // Для создания своего типа данных
 
 export const list: SortProp[] = [
-    { name: 'популярности (↓)', sortName: 'rating' },
-    { name: 'популярности (↑)', sortName: '-rating' },
-    { name: 'цене (↓)', sortName: 'price' },
-    { name: 'цене (↑)', sortName: '-price' },
-    { name: 'алфавиту (↓)', sortName: 'title' },
-    { name: 'алфавиту (↑)', sortName: '-title' },
+    { name: 'популярности (↓)', sortName: SortEnum.RATING_DESC },
+    { name: 'популярности (↑)', sortName: SortEnum.RATING_ASC },
+    { name: 'цене (↓)', sortName: SortEnum.PRICE_DESC },
+    { name: 'цене (↑)', sortName: SortEnum.PRICE_ASC },
+    { name: 'алфавиту (↓)', sortName: SortEnum.TITLE_DESC },
+    { name: 'алфавиту (↑)', sortName: SortEnum.TITLE_ASC },
 ];
 
 const Sort: React.FC = () => {

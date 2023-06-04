@@ -27,6 +27,7 @@ export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, t
                 </div>
                 <div className={styles['cart__item-count']}>
                     <div
+                        // убрать один товар данного типа
                         onClick={() => dispatch(decItems(id))}
                         className={`${styles.button} ${styles['button--outline']} ${styles['button--circle']} ${styles['cart__item-count-minus']}`}>
                         <svg
@@ -48,8 +49,7 @@ export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, t
                     <b>{count}</b>
                     <div
                         onClick={() => {
-                            // @ts-ignore
-                            return dispatch(addToCart({ id }));
+                            return dispatch(addToCart({ id } as Items));
                         }}
                         className={`${styles.button} ${styles['button--outline']} ${styles['button--circle']} ${styles['cart__item-count-plus']}`}>
                         <svg

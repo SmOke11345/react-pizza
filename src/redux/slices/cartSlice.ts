@@ -11,7 +11,7 @@ export type Items = {
     count: number;
 };
 
-interface CartItemProp {
+export interface CartItemProp {
     cartItems: Items[];
     totalPrice: number;
 }

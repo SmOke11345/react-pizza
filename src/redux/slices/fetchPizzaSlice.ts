@@ -3,20 +3,35 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Items } from './cartSlice.ts';
 
 // Используется для краткости написания кода,
-// к примеру когда все параметры string и первое значение number
-type fetchPizzaArgs = Record<string, string>;
+// к примеру когда все параметры string (и первое значение number Record<string, string> & {currentPage: number })
+
+export type fetchPizzaArgs = {
+    currentPage: string;
+    categoryUrl: string;
+    sortBy: string;
+    sortAD: string;
+    search: string;
+};
+
+// Используется для создания динамического свойства (в этом примере)
+// Теперь если мы захотим поменять значение, мы меняем его в enum и оно меняется везде где используется
+export enum StatusName {
+    LOADING = 'loading',
+    SUCCESS = 'success',
+    ERROR = 'error',
+}
 
 interface FetchPizzaProp {
     items: Items[];
-    status: 'loading' | 'success' | 'error';
+    status: StatusName;
 }
 
 export const fetchItemsPizza = createAsyncThunk<Items[], fetchPizzaArgs>(
     'pizzas/fetchItems',
     async (params) => {
-        const { currentPage, categoryUrl, sortBy, sortAD, searchValue } = params;
+        const { currentPage, categoryUrl, sortBy, sortAD, search } = params;
         const { data } = await axios.get(
-            `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${searchValue}`,
+            `https://6458b2368badff578ef810ab.mockapi.io/items?page=${currentPage}&limit=4&${categoryUrl}sortBy=${sortBy}&order=${sortAD}${search}`,
         );
 
         return data;
@@ -25,7 +40,7 @@ export const fetchItemsPizza = createAsyncThunk<Items[], fetchPizzaArgs>(
 
 const initialState: FetchPizzaProp = {
     items: [],
-    status: 'loading', // loading | success | error
+    status: StatusName.LOADING, // loading | success | error
 };
 
 const fetchPizzaSlice = createSlice({
@@ -35,16 +50,16 @@ const fetchPizzaSlice = createSlice({
     // Нужен для дополнительных функций (Большая гибкость)
     extraReducers: (builder) => {
         builder.addCase(fetchItemsPizza.pending, (state) => {
-            state.status = 'loading';
+            state.status = StatusName.LOADING;
             // Для отчистки старых элементов после изменения параметров фильтрации
             state.items = [];
         });
         builder.addCase(fetchItemsPizza.fulfilled, (state, action) => {
             state.items = action.payload;
-            state.status = 'success';
+            state.status = StatusName.SUCCESS;
         });
         builder.addCase(fetchItemsPizza.rejected, (state) => {
-            state.status = 'error';
+            state.status = StatusName.ERROR;
             state.items = [];
         });
         //         // Загрузка

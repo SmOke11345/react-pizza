@@ -1,11 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum SortEnum {
+    RATING_DESC = 'rating',
+    RATING_ASC = '-rating',
+    PRICE_DESC = 'price',
+    PRICE_ASC = '-price',
+    TITLE_DESC = 'title',
+    TITLE_ASC = '-title',
+}
+
 export type SortProp = {
     name: string;
-    sortName: 'rating' | 'price' | 'title' | '-rating' | '-price' | '-title';
+    sortName: SortEnum;
 };
 
-interface FilterSliceProp {
+export interface FilterSliceProp {
     searchValue: string;
     category: number;
     currentPage: number;
@@ -19,7 +28,7 @@ const initialState: FilterSliceProp = {
     // можно сказать что это как бы стандартное значение, но в дальнейшем в этот объект будут добавляться новые
     sortProp: {
         name: 'популярности (↓)',
-        sortName: 'rating',
+        sortName: SortEnum.RATING_DESC,
     },
 };
 
@@ -41,9 +50,18 @@ export const filterSlice = createSlice({
             state.currentPage = action.payload;
         },
         setFilters(state, action: PayloadAction<FilterSliceProp>) {
-            state.sortProp = action.payload.sortProp;
-            state.currentPage = Number(action.payload.currentPage);
-            state.category = Number(action.payload.category);
+            if (Object.keys(action.payload).length) {
+                state.currentPage = Number(action.payload.currentPage);
+                state.category = Number(action.payload.category);
+                state.sortProp = action.payload.sortProp;
+            } else {
+                state.currentPage = 1;
+                state.category = 0;
+                state.sortProp = {
+                    name: 'популярности (↓)',
+                    sortName: SortEnum.RATING_DESC,
+                };
+            }
         },
     },
 });

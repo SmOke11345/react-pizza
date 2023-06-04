@@ -8,7 +8,7 @@ import styles from '../../assets/scss/app.module.css';
 
 const typesPizza = ['тонкое', 'традиционное'];
 
-type PizzaItemProps = {
+export type PizzaItemProps = {
     id: string;
     price: number;
     title: string;
@@ -21,7 +21,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
     const [activeSize, setActiveSize] = React.useState<number>(0);
     const [activeType, setActiveType] = React.useState<number>(0);
 
-    // Вовсем нашем массиве ищем пиццу у которой есть такой же id
+    // Во всем нашем массиве ищем пиццу у которой есть такой же id
     const countItems = useAppSelector((state) => state.cart.cartItems.find((obj) => obj.id === id));
     const dispatch = useAppDispatch();
 
@@ -31,7 +31,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ id, price, title, imageUrl, types
             id,
             title,
 
-            // Только для того чтобы выглядело лучше :)
+            // Только для того чтобы выглядело лучше:)
             count: 0,
 
             price,
