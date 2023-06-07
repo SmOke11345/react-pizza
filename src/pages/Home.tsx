@@ -30,11 +30,11 @@ const Home: React.FC = () => {
     // Для передачи параметров запроса в поисковую строку
     const navigate = useNavigate();
 
-    const isSearch = React.useRef(false);
+    // const isSearch = React.useRef(false);
     // для того чтобы при первой загрузке страницы в поисковой строке не оставались какое-либо данные из переменной navigate
     const isMounted = React.useRef(false);
 
-    const request = `?category=${category}`;
+    const request = `category=${category}`;
 
     const fetchPizzas = async () => {
         const categoryUrl = category > 0 ? `${request}&` : '?';
@@ -42,7 +42,6 @@ const Home: React.FC = () => {
         // sort asc or desc
         const sortAD = sortType.includes('-') ? 'asc' : 'desc';
         const search = searchValue ? `&search=${searchValue}` : '';
-
         dispatch(
             fetchItemsPizza({
                 categoryUrl,
@@ -66,7 +65,6 @@ const Home: React.FC = () => {
             });
             navigate(`?${queryStr}`);
         }
-        isMounted.current = true;
     }, [category, sortType, currentPage]);
     // deps[] используется для того, чтобы отслеживать изменения в компонентах и заново выполнять ту функцию которая
     // находиться внутри useEffect, если deps оставить пустым это значит что нужно запустить данный код только
@@ -98,8 +96,13 @@ const Home: React.FC = () => {
                     sortProp: sortProp || list[0],
                 }),
             );
-            isSearch.current = true;
+            isMounted.current = true;
         }
+    }, []);
+
+    // Если будут перерисовки других компонентов и у тебя не изменились props, то не производи перерисовку
+    const onChangeCategory = React.useCallback((index: number) => {
+        dispatch(setCategory(index));
     }, []);
 
     // Делается для того чтобы при первой загрузке сразу отображалось как минимум 6
@@ -116,6 +119,7 @@ const Home: React.FC = () => {
             // @ts-ignore
             return <PizzaItem key={obj.id} {...obj} />;
         });
+
     return (
         <>
             <div className={styles.container}>
@@ -126,13 +130,8 @@ const Home: React.FC = () => {
                      значения из дочерних компонентов и передать их в родительский state 
                      */}
                     {/*функция говорит что нужно взять index*/}
-                    <Categories
-                        value={category}
-                        onChangeCategory={(index) => {
-                            dispatch(setCategory(index));
-                        }}
-                    />
-                    <Sort />
+                    <Categories value={category} onChangeCategory={onChangeCategory} />
+                    <Sort value={sortProp} />
                 </div>
                 <h2 className={styles.content__title}>Все пиццы</h2>
                 {status === 'error' ? (

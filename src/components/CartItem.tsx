@@ -26,10 +26,16 @@ export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, t
                     </p>
                 </div>
                 <div className={styles['cart__item-count']}>
-                    <div
+                    <button
+                        // для отключения кнопки, чтобы не было возможности уходить в минус
+                        disabled={count === 1}
                         // убрать один товар данного типа
                         onClick={() => dispatch(decItems(id))}
-                        className={`${styles.button} ${styles['button--outline']} ${styles['button--circle']} ${styles['cart__item-count-minus']}`}>
+                        className={`${styles.button} ${styles['button--outline']} ${
+                            styles['button--circle']
+                        } ${styles['cart__item-count-minus']} ${
+                            count === 1 ? styles['button--disabled'] : ''
+                        }`}>
                         <svg
                             fill="none"
                             height="10"
@@ -45,9 +51,9 @@ export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, t
                                 fill="#EB5A1E"
                             />
                         </svg>
-                    </div>
+                    </button>
                     <b>{count}</b>
-                    <div
+                    <button
                         onClick={() => {
                             return dispatch(addToCart({ id } as Items));
                         }}
@@ -67,7 +73,7 @@ export const CartItem: React.FC<Items> = ({ id, count, imageUrl, price, sizes, t
                                 fill="#EB5A1E"
                             />
                         </svg>
-                    </div>
+                    </button>
                 </div>
                 <div className={styles['cart__item-price']}>
                     <b>{price * count} ₽</b>

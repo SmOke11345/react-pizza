@@ -347,5 +347,13 @@ body {
       font-weight: 600;
       font-size: 18px;
     }
+
+
   }
+}
+
+.button--disabled {
+  opacity: .4;
+  pointer-events: none;
+  border-color: #787878;
 }
