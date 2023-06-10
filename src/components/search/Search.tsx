@@ -5,10 +5,11 @@ import React from 'react';
 // (но лучше найти что-то полегче, т.к нужно создавать контролируемый импут локально)
 import debounce from 'lodash.debounce';
 import { useDispatch } from 'react-redux';
-import { setSearchValue } from '../../redux/slices/filterSlice';
+
 import { AppDispatch } from '../../redux/store.ts';
 
 import styles from './style.module.css';
+import { setSearchValue } from '../../redux/filter/slice.ts';
 
 const Search: React.FC = () => {
     const [value, setValue] = React.useState<string>('');

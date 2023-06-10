@@ -1,18 +1,21 @@
 import React from 'react';
-// рефакторинг кода
-import { cartSelector, clearCartItems } from '../redux/slices/cartSlice';
-import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
-
-import { Link } from 'react-router-dom';
-import { CartItem } from '../components/CartItem';
 
 import EmptyCart from '../components/EmptyCart';
+
+// рефакторинг кода
+import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
+import { Link } from 'react-router-dom';
+import { CartItem } from '../components/CartItem';
+import { clearCartItems } from '../redux/cart/slice.ts';
+import { cartSelector } from '../redux/cart/selectors.ts';
 
 import styles from '../assets/scss/app.module.css';
 
 const Cart: React.FC = () => {
     const { cartItems, totalPrice } = useAppSelector(cartSelector);
     const dispatch = useAppDispatch();
+
+    const isMounted = React.useRef(false);
 
     const totalCountItems = cartItems.reduce((sum: number, item) => sum + item.count, 0);
 
@@ -21,6 +24,17 @@ const Cart: React.FC = () => {
             dispatch(clearCartItems());
         }
     };
+
+    React.useEffect(() => {
+        // Элемент отрендерился
+        if (isMounted.current) {
+            // превращаем полученные данные в строку
+            const json = JSON.stringify(cartItems);
+            // сохраняем данные в localStorage
+            localStorage.setItem('cartItems', json);
+        }
+        isMounted.current = true;
+    }, [cartItems]);
 
     if (cartItems.length === 0) {
         return <EmptyCart />;

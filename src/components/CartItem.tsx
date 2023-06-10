@@ -1,5 +1,7 @@
 import React from 'react';
-import { addToCart, decItems, Items, removeFromCart } from '../redux/slices/cartSlice';
+
+import { addToCart, decItems, removeFromCart } from '../redux/cart/slice.ts';
+import { Items } from '../redux/cart/types.ts';
 import { useAppDispatch } from '../redux/hook.ts';
 
 import styles from '../assets/scss/app.module.css';

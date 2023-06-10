@@ -1,24 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store.ts';
+import { getCartItemsLocalStorage } from '../../utils/getCartItemLocalStorage.ts';
+import { calcTotalPrice } from '../../utils/calcTotalPrice.ts';
+import { CartItemProp, Items } from './types.ts';
 
-export type Items = {
-    id: string;
-    title: string;
-    price: number;
-    imageUrl: string;
-    types: number[] | string;
-    sizes: number[] | number;
-    count: number;
-};
-
-export interface CartItemProp {
-    cartItems: Items[];
-    totalPrice: number;
-}
+// Получаем значения из функции
+const { cartItems, totalPrice } = getCartItemsLocalStorage();
 
 const initialState: CartItemProp = {
-    cartItems: [],
-    totalPrice: 0,
+    cartItems,
+    totalPrice,
 };
 
 export const cartSlice = createSlice({
@@ -37,11 +27,8 @@ export const cartSlice = createSlice({
                 state.cartItems.push({ ...action.payload, count: 1 });
             }
 
-            // Вычисляем общую сумму
-            state.totalPrice = state.cartItems.reduce((sum, obj) => {
-                // + sum нужно чтобы, вернуть предыдущую сумму
-                return obj.price * obj.count + sum;
-            }, 0);
+            // Вычисляем общую сумму после добавления в корзину
+            state.totalPrice = calcTotalPrice(state.cartItems);
         },
         decItems(state, action: PayloadAction<string>) {
             const findItem = state.cartItems.find((obj) => obj.id === action.payload);
@@ -58,10 +45,6 @@ export const cartSlice = createSlice({
         },
     },
 });
-
-// нужно для того чтобы, избавиться от повторяющегося кода
-export const cartSelector = (state: RootState) => state.cart;
-
 export const { addToCart, decItems, removeFromCart, clearCartItems } = cartSlice.actions;
 
 export default cartSlice.reducer;

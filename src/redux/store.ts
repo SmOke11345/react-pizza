@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import filterReducer from './slices/filterSlice';
-import cartReducer from './slices/cartSlice';
-import fetchPizzaSlice from './slices/fetchPizzaSlice';
+import filterReducer from './filter/slice.ts';
+import cartReducer from './cart/slice.ts';
+import fetchPizzaReducer from './pizza/slice.ts';
 
 export const store = configureStore({
     // Reducer принимает состояния и возвращает следующее состояние
@@ -10,7 +10,7 @@ export const store = configureStore({
     reducer: {
         filter: filterReducer,
         cart: cartReducer,
-        pizzas: fetchPizzaSlice,
+        pizzas: fetchPizzaReducer,
     },
 });
 

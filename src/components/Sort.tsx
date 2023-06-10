@@ -1,9 +1,11 @@
 import React from 'react';
-import { setSort, SortEnum, SortProp } from '../redux/slices/filterSlice';
+
 import { useAppDispatch } from '../redux/hook.ts';
+import { useWhyDidYouUpdate } from 'ahooks';
+import { SortEnum, SortProp } from '../redux/filter/types.ts';
+import { setSort } from '../redux/filter/slice.ts';
 
 import styles from '../assets/scss/app.module.css';
-import { useWhyDidYouUpdate } from 'ahooks';
 
 // Для создания своего типа данных
 

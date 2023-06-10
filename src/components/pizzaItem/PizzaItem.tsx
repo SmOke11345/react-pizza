@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { addToCart, Items } from '../../redux/slices/cartSlice';
+import { Items } from '../../redux/cart/types.ts';
+import { addToCart } from '../../redux/cart/slice.ts';
 import { useAppDispatch, useAppSelector } from '../../redux/hook.ts';
 
 import styles from '../../assets/scss/app.module.css';

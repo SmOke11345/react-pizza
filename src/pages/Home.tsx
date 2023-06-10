@@ -2,7 +2,6 @@ import React from 'react';
 // Библиотека для извлечения и управления параметрами URL запроса
 // @ts-ignore
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
@@ -10,16 +9,18 @@ import Skeleton from '../components/pizzaItem/Skeleton';
 import PizzaItem from '../components/pizzaItem';
 import Pagination from '../components/Pagination';
 
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hook.ts';
-import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchItemsPizza, fetchPizzaArgs } from '../redux/slices/fetchPizzaSlice';
+import { fetchItemsPizza } from '../redux/pizza/asyncThunk.ts';
+import { fetchPizzaArgs } from '../redux/pizza/types.ts';
+import { setCategory, setCurrentPage, setFilters } from '../redux/filter/slice.ts';
 
 import styles from '../assets/scss/app.module.css';
 
 const Home: React.FC = () => {
-    // const category = useSelector((state) => state.filter.category);
-    // const sortType = useSelector((state) => state.filter.sortProp.sortName);
-    // const pageCount = useSelector((state) => state.filter.currentPage);
+    // const category = useSelector((state) => state.pizza.category);
+    // const sortType = useSelector((state) => state.pizza.sortProp.sortName);
+    // const pageCount = useSelector((state) => state.pizza.currentPage);
     const { category, sortProp, currentPage, searchValue } = useAppSelector(
         (state) => state.filter,
     );

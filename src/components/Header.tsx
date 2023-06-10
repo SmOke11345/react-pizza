@@ -1,13 +1,14 @@
 import React from 'react';
 
+import Search from './search/Search';
+
+import { useAppSelector } from '../redux/hook.ts';
+import { Link, useLocation } from 'react-router-dom';
+// рефакторинг кода
+import { cartSelector } from '../redux/cart/selectors.ts';
+
 import pizzaLogo from '../assets/img/pizza-logo.svg';
 import styles from '../assets/scss/app.module.css';
-import { Link, useLocation } from 'react-router-dom';
-import Search from './search/Search';
-import { useAppSelector } from '../redux/hook.ts';
-
-// рефакторинг кода
-import { cartSelector } from '../redux/slices/cartSlice';
 
 const Header: React.FC = () => {
     const { cartItems, totalPrice } = useAppSelector(cartSelector);
